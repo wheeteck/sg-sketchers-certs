@@ -883,12 +883,20 @@
         let currentUserProfile = null;
         let systemSettings = null;
 
-        // Load system settings
+        // Load system settings - FIXED VERSION
         async function loadSystemSettings() {
             try {
+                console.log('Loading system settings...');
                 const settingsDoc = await getDoc(doc(db, 'systemSettings', 'config'));
                 if (settingsDoc.exists()) {
                     systemSettings = settingsDoc.data();
+                    console.log('System settings loaded successfully');
+                    console.log('Logo base64 exists:', systemSettings.logoBase64 ? 'Yes' : 'No');
+                    if (systemSettings.logoBase64) {
+                        console.log('Logo base64 length:', systemSettings.logoBase64.length);
+                    }
+                } else {
+                    console.log('No system settings document found');
                 }
             } catch (error) {
                 console.error('Error loading system settings:', error);
@@ -954,8 +962,14 @@
             }
         };
 
-        // Certificate View Functions
+        // Certificate View Functions - FIXED VERSION
         window.viewCertificate = async (certData) => {
+            // Ensure system settings are loaded before showing certificate
+            if (!systemSettings || !systemSettings.logoBase64) {
+                console.log('System settings not loaded or no logo, loading now...');
+                await loadSystemSettings();
+            }
+            
             const modal = document.getElementById('certModal');
             const certView = document.getElementById('certificateView');
             
@@ -978,10 +992,15 @@
             // Format hours
             const hoursDisplay = certData.hours === 'NA' ? 'Not Applicable' : certData.hours + ' Hours';
             
-            // Get logo from system settings or use fallback
-            const logoHtml = systemSettings?.logoBase64 
-                ? `<img src="${systemSettings.logoBase64}" alt="Singapore Sketchers">`
-                : '<div style="font-size: 48px;">🎨</div>';
+            // Get logo from system settings - FIXED VERSION
+            let logoHtml = '<div style="font-size: 48px;">🎨</div>'; // Default fallback
+            
+            if (systemSettings && systemSettings.logoBase64) {
+                console.log('Using logo from database');
+                logoHtml = `<img src="${systemSettings.logoBase64}" alt="Singapore Sketchers" style="max-height: 60px; width: auto;">`;
+            } else {
+                console.log('No logo found in settings, using emoji fallback');
+            }
             
             certView.innerHTML = `
                 <div class="corner-decoration top-left"></div>
@@ -1033,7 +1052,9 @@
                 const canvas = await html2canvas(certificate, {
                     scale: 2,
                     backgroundColor: '#ffffff',
-                    logging: false
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true
                 });
                 
                 const link = document.createElement('a');
@@ -1196,6 +1217,8 @@
                 snapshot.forEach(doc => {
                     const cert = doc.data();
                     const date = cert.issuedDate?.toDate ? cert.issuedDate.toDate().toLocaleDateString() : 'Recent';
+                    // Escape single quotes in JSON for onclick
+                    const certJson = JSON.stringify(cert).replace(/'/g, "\\'");
                     html += `
                         <div class="certificate-item">
                             <h3>${cert.title}</h3>
@@ -1206,7 +1229,7 @@
                                 <div><strong>Certificate #:</strong> <span class="cert-number">${cert.certificateNumber}</span></div>
                             </div>
                             <div class="actions">
-                                <button class="btn-view" onclick='viewCertificate(${JSON.stringify(cert).replace(/'/g, "&apos;")})'>View Certificate</button>
+                                <button class="btn-view" onclick='viewCertificate(${certJson})'>View Certificate</button>
                             </div>
                         </div>
                     `;
@@ -1241,6 +1264,8 @@
                 snapshot.forEach(doc => {
                     const cert = doc.data();
                     const date = cert.issuedDate?.toDate ? cert.issuedDate.toDate().toLocaleDateString() : 'Recent';
+                    // Escape single quotes in JSON for onclick
+                    const certJson = JSON.stringify(cert).replace(/'/g, "\\'");
                     html += `
                         <div class="certificate-item">
                             <h3>${cert.title}</h3>
@@ -1251,7 +1276,7 @@
                                 <div><strong>Certificate #:</strong> <span class="cert-number">${cert.certificateNumber}</span></div>
                             </div>
                             <div class="actions">
-                                <button class="btn-view" onclick='viewCertificate(${JSON.stringify(cert).replace(/'/g, "&apos;")})'>View Certificate</button>
+                                <button class="btn-view" onclick='viewCertificate(${certJson})'>View Certificate</button>
                             </div>
                         </div>
                     `;
@@ -1301,8 +1326,11 @@
             messageDiv.textContent = message;
         }
 
-        // Initialize
-        loadSystemSettings();
+        // Initialize - Load settings on startup (FIXED)
+        (async () => {
+            await loadSystemSettings();
+            console.log('Initial settings load complete');
+        })();
 
         // Auth State Observer
         onAuthStateChanged(auth, async (user) => {
