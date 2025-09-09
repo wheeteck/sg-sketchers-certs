@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singapore Sketchers Certification System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            margin-top: 50px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        
+        .auth-section {
+            margin-bottom: 25px;
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            color: #666;
+            position: relative;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: #ddd;
+        }
+        
+        .divider::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: #ddd;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .google-btn {
+            background: white;
+            color: #333;
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .google-btn:hover {
+            background: #f8f8f8;
+            border-color: #4285f4;
+        }
+        
+        .email-btn {
+            background: #667eea;
+            color: white;
+        }
+        
+        .email-btn:hover {
+            background: #5a67d8;
+        }
+        
+        .logout-btn {
+            background: #e53e3e;
+            color: white;
+        }
+        
+        .logout-btn:hover {
+            background: #c53030;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .email-form {
+            display: none;
+        }
+        
+        .user-info {
+            text-align: center;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .user-info h2 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+        
+        .user-info p {
+            color: #718096;
+            margin: 5px 0;
+        }
+        
+        .error-msg {
+            color: #e53e3e;
+            text-align: center;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        
+        .success-msg {
+            color: #38a169;
+            text-align: center;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 SG Sketchers Certification</h1>
+        
+        <!-- Loading State -->
+        <div id="loadingView" class="loading">
+            <p>Loading...</p>
+        </div>
+        
+        <!-- Signed Out View -->
+        <div id="signedOutView" class="hidden">
+            <div class="auth-section">
+                <button class="google-btn" onclick="signInWithGoogle()">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" height="18">
+                    Sign in with Google
+                </button>
+            </div>
+            
+            <div class="divider">OR</div>
+            
+            <div class="auth-section">
+                <button class="email-btn" onclick="toggleEmailForm()">
+                    Sign in with Email
+                </button>
+                
+                <form id="emailForm" class="email-form" onsubmit="signInWithEmail(event)">
+                    <input type="email" id="emailInput" placeholder="Email" required>
+                    <input type="password" id="passwordInput" placeholder="Password" required>
+                    <button type="submit" class="email-btn">Sign In</button>
+                    <p style="margin-top: 10px; font-size: 12px; text-align: center;">
+                        <a href="#" onclick="toggleSignUp()" style="color: #667eea;">Need an account? Sign up</a>
+                    </p>
+                </form>
+                
+                <form id="signUpForm" class="email-form" onsubmit="signUpWithEmail(event)">
+                    <input type="text" id="nameInput" placeholder="Full Name" required>
+                    <input type="email" id="signUpEmailInput" placeholder="Email" required>
+                    <input type="password" id="signUpPasswordInput" placeholder="Password (min 6 characters)" minlength="6" required>
+                    <button type="submit" class="email-btn">Create Account</button>
+                    <p style="margin-top: 10px; font-size: 12px; text-align: center;">
+                        <a href="#" onclick="toggleSignUp()" style="color: #667eea;">Back to sign in</a>
+                    </p>
+                </form>
+            </div>
+            
+            <div id="errorMsg" class="error-msg"></div>
+            <div id="successMsg" class="success-msg"></div>
+        </div>
+        
+        <!-- Signed In View -->
+        <div id="signedInView" class="hidden">
+            <div class="user-info">
+                <h2>Welcome!</h2>
+                <p id="userName">Name: Loading...</p>
+                <p id="userEmail">Email: Loading...</p>
+                <p id="userRole">Role: Loading...</p>
+                <p id="authMethod">Sign-in: Loading...</p>
+            </div>
+            
+            <button class="logout-btn" onclick="signOut()">Sign Out</button>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #f0fff4; border-radius: 5px; border: 1px solid #9ae6b4;">
+                <p style="font-size: 14px; color: #22543d; text-align: center;">
+                    ✅ Phase 1 Complete: Authentication Working!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Configuration -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { 
+            getAuth, 
+            signInWithPopup,
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
+            GoogleAuthProvider,
+            onAuthStateChanged,
+            signOut as firebaseSignOut
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { 
+            getFirestore, 
+            doc, 
+            getDoc, 
+            setDoc 
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Your Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyBsSi4gFWV8VX9kuq0mJmHtTgnR0VXyQ4k",
+            authDomain: "sg-sketchers-certs.firebaseapp.com",
+            projectId: "sg-sketchers-certs",
+            storageBucket: "sg-sketchers-certs.firebasestorage.app",
+            messagingSenderId: "506191422278",
+            appId: "1:506191422278:web:55bc1d0ff90a966285bb47"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        // Make functions available globally
+        window.signInWithGoogle = async () => {
+            try {
+                clearMessages();
+                const result = await signInWithPopup(auth, googleProvider);
+                showSuccess('Signed in successfully!');
+            } catch (error) {
+                showError('Google sign-in failed: ' + error.message);
+            }
+        };
+
+        window.signInWithEmail = async (event) => {
+            event.preventDefault();
+            clearMessages();
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                showSuccess('Signed in successfully!');
+            } catch (error) {
+                showError('Sign-in failed: ' + error.message);
+            }
+        };
+
+        window.signUpWithEmail = async (event) => {
+            event.preventDefault();
+            clearMessages();
+            const name = document.getElementById('nameInput').value;
+            const email = document.getElementById('signUpEmailInput').value;
+            const password = document.getElementById('signUpPasswordInput').value;
+            
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                
+                // Create user profile in Firestore
+                await setDoc(doc(db, 'users', userCredential.user.uid), {
+                    name: name,
+                    email: email,
+                    role: 'participant',  // Default role for new users
+                    createdAt: new Date().toISOString()
+                });
+                
+                showSuccess('Account created successfully!');
+            } catch (error) {
+                showError('Sign-up failed: ' + error.message);
+            }
+        };
+
+        window.signOut = async () => {
+            try {
+                await firebaseSignOut(auth);
+                clearMessages();
+            } catch (error) {
+                showError('Sign-out failed: ' + error.message);
+            }
+        };
+
+        window.toggleEmailForm = () => {
+            const emailForm = document.getElementById('emailForm');
+            const signUpForm = document.getElementById('signUpForm');
+            emailForm.style.display = emailForm.style.display === 'none' ? 'block' : 'none';
+            signUpForm.style.display = 'none';
+            clearMessages();
+        };
+
+        window.toggleSignUp = () => {
+            const emailForm = document.getElementById('emailForm');
+            const signUpForm = document.getElementById('signUpForm');
+            emailForm.style.display = emailForm.style.display === 'none' ? 'block' : 'none';
+            signUpForm.style.display = signUpForm.style.display === 'none' ? 'block' : 'none';
+            clearMessages();
+        };
+
+        function showError(message) {
+            document.getElementById('errorMsg').textContent = message;
+            document.getElementById('successMsg').textContent = '';
+        }
+
+        function showSuccess(message) {
+            document.getElementById('successMsg').textContent = message;
+            document.getElementById('errorMsg').textContent = '';
+        }
+
+        function clearMessages() {
+            document.getElementById('errorMsg').textContent = '';
+            document.getElementById('successMsg').textContent = '';
+        }
+
+        // Monitor auth state
+        onAuthStateChanged(auth, async (user) => {
+            const loadingView = document.getElementById('loadingView');
+            const signedOutView = document.getElementById('signedOutView');
+            const signedInView = document.getElementById('signedInView');
+            
+            loadingView.classList.add('hidden');
+            
+            if (user) {
+                // User is signed in
+                signedOutView.classList.add('hidden');
+                signedInView.classList.remove('hidden');
+                
+                // Get user profile from Firestore
+                const userDoc = await getDoc(doc(db, 'users', user.uid));
+                
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    document.getElementById('userName').textContent = `Name: ${userData.name || 'Not set'}`;
+                    document.getElementById('userEmail').textContent = `Email: ${user.email}`;
+                    document.getElementById('userRole').textContent = `Role: ${userData.role || 'participant'}`;
+                } else {
+                    // If no Firestore profile exists (e.g., for Google sign-in)
+                    document.getElementById('userName').textContent = `Name: ${user.displayName || 'Not set'}`;
+                    document.getElementById('userEmail').textContent = `Email: ${user.email}`;
+                    document.getElementById('userRole').textContent = `Role: No profile yet`;
+                    
+                    // Create profile for Google users
+                    if (user.providerData[0].providerId === 'google.com') {
+                        await setDoc(doc(db, 'users', user.uid), {
+                            name: user.displayName,
+                            email: user.email,
+                            role: 'participant',
+                            createdAt: new Date().toISOString()
+                        });
+                    }
+                }
+                
+                // Show auth method
+                const provider = user.providerData[0].providerId;
+                const authMethod = provider === 'google.com' ? 'Google' : 'Email/Password';
+                document.getElementById('authMethod').textContent = `Sign-in: ${authMethod}`;
+                
+            } else {
+                // User is signed out
+                signedInView.classList.add('hidden');
+                signedOutView.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
