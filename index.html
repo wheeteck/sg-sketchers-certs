@@ -174,6 +174,19 @@
             border-color: #4285f4;
         }
         
+        .btn-view {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .btn-view:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
         /* Certificate List Styles */
         .certificate-list {
             display: grid;
@@ -208,6 +221,230 @@
             padding: 2px 6px;
             border-radius: 3px;
             font-size: 12px;
+        }
+        
+        .certificate-item .actions {
+            margin-top: 10px;
+        }
+        
+        /* Certificate View Modal Styles */
+        .cert-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .cert-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .cert-modal-content {
+            background: white;
+            border-radius: 10px;
+            max-width: 950px;
+            width: 100%;
+            position: relative;
+            padding: 20px;
+        }
+        
+        .close-cert-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #e53e3e;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            z-index: 10;
+        }
+        
+        /* Certificate Design */
+        .certificate {
+            width: 100%;
+            max-width: 850px;
+            height: 600px;
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border: 2px solid #e5e5e5;
+            position: relative;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+        
+        .certificate::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 3px solid;
+            border-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%) 1;
+            pointer-events: none;
+        }
+        
+        .corner-decoration {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            opacity: 0.1;
+        }
+        
+        .corner-decoration.top-left {
+            top: 0;
+            left: 0;
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+        }
+        
+        .corner-decoration.top-right {
+            top: 0;
+            right: 0;
+            clip-path: polygon(0 0, 100% 0, 100% 100%);
+        }
+        
+        .corner-decoration.bottom-left {
+            bottom: 0;
+            left: 0;
+            clip-path: polygon(0 0, 0 100%, 100% 100%);
+        }
+        
+        .corner-decoration.bottom-right {
+            bottom: 0;
+            right: 0;
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+        }
+        
+        .cert-logo {
+            margin-bottom: 10px;
+            height: 60px;
+        }
+        
+        .cert-logo img {
+            height: 100%;
+            width: auto;
+        }
+        
+        .cert-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 25px;
+            font-family: 'Georgia', serif;
+        }
+        
+        .cert-presented {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .cert-recipient {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 25px;
+            font-family: 'Georgia', serif;
+            position: relative;
+        }
+        
+        .cert-recipient::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #667eea, transparent);
+        }
+        
+        .cert-achievement {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            max-width: 600px;
+        }
+        
+        .cert-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            width: 100%;
+            margin-top: auto;
+            padding-top: 25px;
+            border-top: 1px solid #e5e5e5;
+        }
+        
+        .cert-detail {
+            text-align: center;
+        }
+        
+        .cert-detail-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+        
+        .cert-detail-value {
+            font-size: 14px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .cert-number {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            font-size: 10px;
+            color: #999;
+            font-family: monospace;
+        }
+        
+        .signature-line {
+            border-top: 1px solid #333;
+            width: 150px;
+            margin-top: 25px;
+        }
+        
+        .cert-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 120px;
+            color: rgba(102, 126, 234, 0.05);
+            font-weight: bold;
+            text-transform: uppercase;
+            pointer-events: none;
+            z-index: 0;
         }
         
         /* User Management Table */
@@ -386,6 +623,24 @@
         .link-text:hover {
             color: #5a67d8;
         }
+        
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .certificate, .certificate * {
+                visibility: visible;
+            }
+            .certificate {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .close-cert-btn, .cert-actions {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -534,6 +789,22 @@
         </div>
     </div>
 
+    <!-- Certificate View Modal -->
+    <div id="certModal" class="cert-modal">
+        <div class="cert-modal-content">
+            <button class="close-cert-btn" onclick="closeCertModal()">×</button>
+            
+            <div class="certificate" id="certificateView">
+                <!-- Certificate will be populated here -->
+            </div>
+            
+            <div class="cert-actions">
+                <button class="btn-primary" onclick="downloadCertificate()">Download as Image</button>
+                <button class="btn-secondary" onclick="window.print()">Print Certificate</button>
+            </div>
+        </div>
+    </div>
+
     <!-- User Role Edit Modal -->
     <div id="roleModal" class="modal">
         <div class="modal-content">
@@ -559,6 +830,9 @@
             </form>
         </div>
     </div>
+
+    <!-- Load html2canvas for certificate download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <!-- Firebase Scripts -->
     <script type="module">
@@ -607,6 +881,19 @@
         // Global variables
         let currentUser = null;
         let currentUserProfile = null;
+        let systemSettings = null;
+
+        // Load system settings
+        async function loadSystemSettings() {
+            try {
+                const settingsDoc = await getDoc(doc(db, 'systemSettings', 'config'));
+                if (settingsDoc.exists()) {
+                    systemSettings = settingsDoc.data();
+                }
+            } catch (error) {
+                console.error('Error loading system settings:', error);
+            }
+        }
 
         // Auth Functions
         window.signInWithGoogle = async () => {
@@ -631,48 +918,31 @@
             }
         };
 
-window.signUpWithEmail = async (event) => {
-    event.preventDefault();
-    const name = document.getElementById('signUpName').value;
-    const email = document.getElementById('signUpEmail').value;
-    const password = document.getElementById('signUpPassword').value;
-    
-    try {
-        // Create auth account
-        console.log('Creating auth account...');
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        console.log('Auth account created:', userCredential.user.uid);
-        
-        // Create Firestore profile
-        console.log('Creating Firestore profile...');
-        await setDoc(doc(db, 'users', userCredential.user.uid), {
-            name: name,
-            email: email,
-            role: 'participant',
-            createdAt: new Date().toISOString() // Use string date instead of serverTimestamp
-        });
-        console.log('Firestore profile created');
-        
-        showAuthMessage('Account created successfully! You can now sign in.', 'success');
-        
-        // Switch back to sign-in form
-        setTimeout(() => {
-            toggleSignUp();
-        }, 2000);
-        
-    } catch (error) {
-        console.error('Sign-up error:', error);
-        showAuthMessage('Sign-up failed: ' + error.message, 'error');
-    }
-};
+        window.signUpWithEmail = async (event) => {
+            event.preventDefault();
+            const name = document.getElementById('signUpName').value;
+            const email = document.getElementById('signUpEmail').value;
+            const password = document.getElementById('signUpPassword').value;
+            
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await setDoc(doc(db, 'users', userCredential.user.uid), {
+                    name: name,
+                    email: email,
+                    role: 'participant',
+                    createdAt: serverTimestamp()
+                });
+                showAuthMessage('Account created successfully!', 'success');
+            } catch (error) {
+                showAuthMessage('Sign-up failed: ' + error.message, 'error');
+            }
+        };
 
         window.toggleSignUp = () => {
             const signInForm = document.getElementById('emailSignInForm');
             const signUpForm = document.getElementById('signUpForm');
             signInForm.classList.toggle('hidden');
             signUpForm.classList.toggle('hidden');
-            
-            // Clear any messages
             document.getElementById('authMessage').innerHTML = '';
         };
 
@@ -681,6 +951,98 @@ window.signUpWithEmail = async (event) => {
                 await firebaseSignOut(auth);
             } catch (error) {
                 console.error('Sign-out error:', error);
+            }
+        };
+
+        // Certificate View Functions
+        window.viewCertificate = async (certData) => {
+            const modal = document.getElementById('certModal');
+            const certView = document.getElementById('certificateView');
+            
+            // Get achievement text based on type
+            let achievementText = '';
+            if (certData.type === 'committee') {
+                achievementText = `has served with distinction as <strong>${certData.title}</strong> and has contributed significantly to the Singapore Sketchers community`;
+            } else if (certData.type === 'volunteer') {
+                achievementText = `has volunteered for <strong>${certData.title}</strong> and has demonstrated exceptional dedication and service`;
+            } else if (certData.type === 'trainer') {
+                achievementText = `is certified as a <strong>${certData.title}</strong> and is qualified to conduct training sessions for Singapore Sketchers`;
+            } else {
+                achievementText = `has successfully completed the <strong>${certData.title}</strong> training program and has demonstrated proficiency in the required skills and knowledge`;
+            }
+            
+            // Format date
+            const date = certData.issuedDate?.toDate ? certData.issuedDate.toDate() : new Date();
+            const dateStr = date.toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' });
+            
+            // Format hours
+            const hoursDisplay = certData.hours === 'NA' ? 'Not Applicable' : certData.hours + ' Hours';
+            
+            // Get logo from system settings or use fallback
+            const logoHtml = systemSettings?.logoBase64 
+                ? `<img src="${systemSettings.logoBase64}" alt="Singapore Sketchers">`
+                : '<div style="font-size: 48px;">🎨</div>';
+            
+            certView.innerHTML = `
+                <div class="corner-decoration top-left"></div>
+                <div class="corner-decoration top-right"></div>
+                <div class="corner-decoration bottom-left"></div>
+                <div class="corner-decoration bottom-right"></div>
+                <div class="watermark">CERTIFIED</div>
+                
+                <div class="cert-logo">${logoHtml}</div>
+                <h1 class="cert-title">Certificate of Achievement</h1>
+                
+                <div class="cert-presented">This is to certify that</div>
+                <div class="cert-recipient">${certData.recipientName}</div>
+                
+                <div class="cert-achievement">${achievementText}</div>
+                
+                <div class="cert-details">
+                    <div class="cert-detail">
+                        <div class="cert-detail-label">Date Issued</div>
+                        <div class="cert-detail-value">${dateStr}</div>
+                    </div>
+                    <div class="cert-detail">
+                        <div class="cert-detail-label">CPD Hours</div>
+                        <div class="cert-detail-value">${hoursDisplay}</div>
+                    </div>
+                    <div class="cert-detail">
+                        <div class="cert-detail-label">Signed By</div>
+                        <div class="cert-detail-value">${certData.issuedBy || systemSettings?.presidentName || 'President'}</div>
+                        <div class="signature-line"></div>
+                    </div>
+                </div>
+                
+                <div class="cert-number">${certData.certificateNumber}</div>
+            `;
+            
+            modal.classList.add('active');
+            
+            // Store cert data for download
+            window.currentCertData = certData;
+        };
+
+        window.closeCertModal = () => {
+            document.getElementById('certModal').classList.remove('active');
+        };
+
+        window.downloadCertificate = async () => {
+            const certificate = document.getElementById('certificateView');
+            try {
+                const canvas = await html2canvas(certificate, {
+                    scale: 2,
+                    backgroundColor: '#ffffff',
+                    logging: false
+                });
+                
+                const link = document.createElement('a');
+                link.download = `certificate-${window.currentCertData.certificateNumber}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            } catch (error) {
+                console.error('Error generating certificate image:', error);
+                alert('Error generating certificate. Please try printing instead.');
             }
         };
 
@@ -696,7 +1058,6 @@ window.signUpWithEmail = async (event) => {
                 const certHours = document.getElementById('certHours').value || 'NA';
                 const certInstructor = document.getElementById('certInstructor').value || '';
                 
-                // Find recipient user
                 const usersQuery = query(collection(db, 'users'), where('email', '==', recipientEmail));
                 const userSnapshot = await getDocs(usersQuery);
                 
@@ -707,12 +1068,10 @@ window.signUpWithEmail = async (event) => {
                 const recipientDoc = userSnapshot.docs[0];
                 const recipientData = recipientDoc.data();
                 
-                // Generate certificate number
                 const year = new Date().getFullYear();
                 const random = Math.random().toString(36).substring(2, 8).toUpperCase();
                 const certNumber = `SGS-${year}-${random}`;
                 
-                // Create certificate
                 await addDoc(collection(db, 'certificates'), {
                     recipientId: recipientDoc.id,
                     recipientEmail: recipientEmail,
@@ -732,7 +1091,6 @@ window.signUpWithEmail = async (event) => {
                 showCertMessage('Certificate issued successfully! Certificate #: ' + certNumber, 'success');
                 document.getElementById('issueCertForm').reset();
                 
-                // Reload certificates if admin
                 if (currentUserProfile.role === 'admin' || currentUserProfile.role === 'superadmin') {
                     loadAllCertificates();
                     loadStats();
@@ -847,6 +1205,9 @@ window.signUpWithEmail = async (event) => {
                                 <div><strong>Issued:</strong> ${date}</div>
                                 <div><strong>Certificate #:</strong> <span class="cert-number">${cert.certificateNumber}</span></div>
                             </div>
+                            <div class="actions">
+                                <button class="btn-view" onclick='viewCertificate(${JSON.stringify(cert).replace(/'/g, "&apos;")})'>View Certificate</button>
+                            </div>
                         </div>
                     `;
                 });
@@ -889,6 +1250,9 @@ window.signUpWithEmail = async (event) => {
                                 <div><strong>Issued:</strong> ${date}</div>
                                 <div><strong>Certificate #:</strong> <span class="cert-number">${cert.certificateNumber}</span></div>
                             </div>
+                            <div class="actions">
+                                <button class="btn-view" onclick='viewCertificate(${JSON.stringify(cert).replace(/'/g, "&apos;")})'>View Certificate</button>
+                            </div>
                         </div>
                     `;
                 });
@@ -902,15 +1266,12 @@ window.signUpWithEmail = async (event) => {
 
         async function loadStats() {
             try {
-                // Total certificates
                 const certsSnapshot = await getDocs(collection(db, 'certificates'));
                 document.getElementById('totalCertsCount').textContent = certsSnapshot.size;
                 
-                // Total users
                 const usersSnapshot = await getDocs(collection(db, 'users'));
                 document.getElementById('totalUsersCount').textContent = usersSnapshot.size;
                 
-                // This month's certificates
                 const now = new Date();
                 const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
                 let monthCount = 0;
@@ -940,6 +1301,9 @@ window.signUpWithEmail = async (event) => {
             messageDiv.textContent = message;
         }
 
+        // Initialize
+        loadSystemSettings();
+
         // Auth State Observer
         onAuthStateChanged(auth, async (user) => {
             currentUser = user;
@@ -949,13 +1313,11 @@ window.signUpWithEmail = async (event) => {
             const headerUserInfo = document.getElementById('headerUserInfo');
             
             if (user) {
-                // Get user profile
                 const userDoc = await getDoc(doc(db, 'users', user.uid));
                 
                 if (userDoc.exists()) {
                     currentUserProfile = userDoc.data();
                 } else {
-                    // Create profile for new users (Google sign-in)
                     currentUserProfile = {
                         name: user.displayName || user.email.split('@')[0],
                         email: user.email,
@@ -965,16 +1327,13 @@ window.signUpWithEmail = async (event) => {
                     await setDoc(doc(db, 'users', user.uid), currentUserProfile);
                 }
                 
-                // Update header
                 document.getElementById('headerUserName').textContent = currentUserProfile.name;
                 document.getElementById('headerUserRole').textContent = currentUserProfile.role.toUpperCase();
                 headerUserInfo.classList.remove('hidden');
                 
-                // Show dashboard
                 authView.classList.add('hidden');
                 dashboardView.classList.remove('hidden');
                 
-                // Show/hide cards based on role
                 const role = currentUserProfile.role;
                 
                 if (role === 'superadmin') {
@@ -1004,7 +1363,6 @@ window.signUpWithEmail = async (event) => {
                 }
                 
             } else {
-                // Show auth view
                 headerUserInfo.classList.add('hidden');
                 authView.classList.remove('hidden');
                 dashboardView.classList.add('hidden');
