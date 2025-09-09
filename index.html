@@ -376,6 +376,16 @@
             opacity: 0.9;
             margin-top: 5px;
         }
+
+        .link-text {
+            color: #667eea;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .link-text:hover {
+            color: #5a67d8;
+        }
     </style>
 </head>
 <body>
@@ -413,6 +423,25 @@
                     <input type="password" id="signInPassword" placeholder="Password" required>
                 </div>
                 <button type="submit" class="btn-primary" style="width: 100%;">Sign In</button>
+                <p style="margin-top: 15px; text-align: center;">
+                    <span class="link-text" onclick="toggleSignUp()">Need an account? Sign up</span>
+                </p>
+            </form>
+
+            <form id="signUpForm" class="hidden" onsubmit="signUpWithEmail(event)">
+                <div class="form-group">
+                    <input type="text" id="signUpName" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="signUpEmail" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="signUpPassword" placeholder="Password (min 6 characters)" minlength="6" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Create Account</button>
+                <p style="margin-top: 15px; text-align: center;">
+                    <span class="link-text" onclick="toggleSignUp()">Back to sign in</span>
+                </p>
             </form>
             
             <div id="authMessage" style="margin-top: 15px;"></div>
@@ -538,6 +567,7 @@
             getAuth, 
             signInWithPopup,
             signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
             GoogleAuthProvider,
             onAuthStateChanged,
             signOut as firebaseSignOut
@@ -601,6 +631,36 @@
             }
         };
 
+        window.signUpWithEmail = async (event) => {
+            event.preventDefault();
+            const name = document.getElementById('signUpName').value;
+            const email = document.getElementById('signUpEmail').value;
+            const password = document.getElementById('signUpPassword').value;
+            
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await setDoc(doc(db, 'users', userCredential.user.uid), {
+                    name: name,
+                    email: email,
+                    role: 'participant',
+                    createdAt: serverTimestamp()
+                });
+                showAuthMessage('Account created successfully!', 'success');
+            } catch (error) {
+                showAuthMessage('Sign-up failed: ' + error.message, 'error');
+            }
+        };
+
+        window.toggleSignUp = () => {
+            const signInForm = document.getElementById('emailSignInForm');
+            const signUpForm = document.getElementById('signUpForm');
+            signInForm.classList.toggle('hidden');
+            signUpForm.classList.toggle('hidden');
+            
+            // Clear any messages
+            document.getElementById('authMessage').innerHTML = '';
+        };
+
         window.signOut = async () => {
             try {
                 await firebaseSignOut(auth);
@@ -660,6 +720,7 @@
                 // Reload certificates if admin
                 if (currentUserProfile.role === 'admin' || currentUserProfile.role === 'superadmin') {
                     loadAllCertificates();
+                    loadStats();
                 }
                 
             } catch (error) {
@@ -732,9 +793,9 @@
                 });
                 closeRoleModal();
                 loadUsers();
-                showAuthMessage('Role updated successfully', 'success');
+                alert('Role updated successfully!');
             } catch (error) {
-                showAuthMessage('Error updating role: ' + error.message, 'error');
+                alert('Error updating role: ' + error.message);
             }
         };
 
@@ -837,12 +898,14 @@
                 // This month's certificates
                 const now = new Date();
                 const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-                const monthQuery = query(
-                    collection(db, 'certificates'),
-                    where('createdAt', '>=', firstDay)
-                );
-                const monthSnapshot = await getDocs(monthQuery);
-                document.getElementById('thisMonthCount').textContent = monthSnapshot.size;
+                let monthCount = 0;
+                certsSnapshot.forEach(doc => {
+                    const cert = doc.data();
+                    if (cert.createdAt && cert.createdAt.toDate && cert.createdAt.toDate() >= firstDay) {
+                        monthCount++;
+                    }
+                });
+                document.getElementById('thisMonthCount').textContent = monthCount;
                 
             } catch (error) {
                 console.error('Error loading stats:', error);
@@ -877,11 +940,12 @@
                 if (userDoc.exists()) {
                     currentUserProfile = userDoc.data();
                 } else {
-                    // Create profile for new users
+                    // Create profile for new users (Google sign-in)
                     currentUserProfile = {
                         name: user.displayName || user.email.split('@')[0],
                         email: user.email,
-                        role: 'participant'
+                        role: 'participant',
+                        createdAt: serverTimestamp()
                     };
                     await setDoc(doc(db, 'users', user.uid), currentUserProfile);
                 }
